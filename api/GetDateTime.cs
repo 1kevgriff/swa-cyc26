@@ -16,7 +16,18 @@ namespace Api
             logger.LogInformation("Processing request for current date/time in Virginia.");
 
             // Get Eastern Time Zone (Virginia is in Eastern Time)
-            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            // Use IANA timezone ID for Linux/Azure compatibility
+            TimeZoneInfo easternZone;
+            try
+            {
+                // Try Windows timezone ID first
+                easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                // Fall back to IANA timezone ID for Linux/Azure
+                easternZone = TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
+            }
             DateTime easternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
             // Format the datetime
