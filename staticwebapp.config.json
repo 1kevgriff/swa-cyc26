@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "route": "/cyc",
+      "methods": [
+        "get"
+      ],
+      "redirect": "https://www.commityourcode.com/",
+      "statusCode": 302
+    }
+  ]
+}
