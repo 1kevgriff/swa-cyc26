@@ -13,6 +13,10 @@ import background from '../assets/background.svg';
 			<h1>
 				To get started, open the <code><pre>src/pages</pre></code> directory in your project.
 			</h1>
+			<div id="virginia-time" class="time-display">
+				<h2>Current Date/Time in Virginia</h2>
+				<p id="datetime-value">Loading...</p>
+			</div>
 			<section id="links">
 				<a class="button" href="https://docs.astro.build">Read our docs</a>
 				<a href="https://astro.build/chat"
@@ -40,6 +44,38 @@ import background from '../assets/background.svg';
 		</p>
 	</a>
 </div>
+
+<script>
+	async function fetchDateTime() {
+		try {
+			const response = await fetch('/api/datetime');
+			if (response.ok) {
+				const data = await response.json();
+				const datetimeElement = document.getElementById('datetime-value');
+				if (datetimeElement) {
+					datetimeElement.textContent = data.dateTime;
+				}
+			} else {
+				const datetimeElement = document.getElementById('datetime-value');
+				if (datetimeElement) {
+					datetimeElement.textContent = 'Failed to fetch date/time';
+				}
+			}
+		} catch (error) {
+			console.error('Error fetching datetime:', error);
+			const datetimeElement = document.getElementById('datetime-value');
+			if (datetimeElement) {
+				datetimeElement.textContent = 'Error loading date/time';
+			}
+		}
+	}
+
+	// Fetch datetime when page loads
+	fetchDateTime();
+
+	// Optionally refresh every minute
+	setInterval(fetchDateTime, 60000);
+</script>
 
 <style>
 	#background {
@@ -74,6 +110,28 @@ import background from '../assets/background.svg';
 	h1 {
 		font-size: 22px;
 		margin-top: 0.25em;
+	}
+
+	.time-display {
+		margin: 2em 0;
+		padding: 1.5em;
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 12px;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+	}
+
+	.time-display h2 {
+		margin: 0 0 0.5em;
+		font-size: 18px;
+		color: #111827;
+	}
+
+	#datetime-value {
+		font-size: 20px;
+		color: #3245ff;
+		font-weight: 500;
+		margin: 0;
 	}
 
 	#links {
