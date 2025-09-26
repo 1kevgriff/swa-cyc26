@@ -13,9 +13,11 @@ import background from '../assets/background.svg';
 			<h1>
 				To get started, open the <code><pre>src/pages</pre></code> directory in your project.
 			</h1>
-			<div id="virginia-time" class="time-display">
-				<h2>Current Date/Time in Virginia</h2>
-				<p id="datetime-value">Loading...</p>
+			<div id="john-wick-quote" class="quote-display">
+				<h2>John Wick Quote</h2>
+				<p id="quote-value" class="quote-text">Loading...</p>
+				<p id="movie-value" class="movie-text"></p>
+				<button id="new-quote-btn" class="quote-button">Get New Quote</button>
 			</div>
 			<section id="links">
 				<a class="button" href="https://docs.astro.build">Read our docs</a>
@@ -46,35 +48,44 @@ import background from '../assets/background.svg';
 </div>
 
 <script>
-	async function fetchDateTime() {
+	async function fetchJohnWickQuote() {
 		try {
-			const response = await fetch('/api/datetime');
+			const response = await fetch('/api/johnwick-quote');
 			if (response.ok) {
 				const data = await response.json();
-				const datetimeElement = document.getElementById('datetime-value');
-				if (datetimeElement) {
-					datetimeElement.textContent = data.dateTime;
+				const quoteElement = document.getElementById('quote-value');
+				const movieElement = document.getElementById('movie-value');
+				if (quoteElement) {
+					quoteElement.textContent = `"${data.quote}"`;
+				}
+				if (movieElement) {
+					movieElement.textContent = `— ${data.movie}`;
 				}
 			} else {
-				const datetimeElement = document.getElementById('datetime-value');
-				if (datetimeElement) {
-					datetimeElement.textContent = 'Failed to fetch date/time';
+				const quoteElement = document.getElementById('quote-value');
+				if (quoteElement) {
+					quoteElement.textContent = 'Failed to fetch quote';
 				}
 			}
 		} catch (error) {
-			console.error('Error fetching datetime:', error);
-			const datetimeElement = document.getElementById('datetime-value');
-			if (datetimeElement) {
-				datetimeElement.textContent = 'Error loading date/time';
+			console.error('Error fetching quote:', error);
+			const quoteElement = document.getElementById('quote-value');
+			if (quoteElement) {
+				quoteElement.textContent = 'Error loading quote';
 			}
 		}
 	}
 
-	// Fetch datetime when page loads
-	fetchDateTime();
+	// Fetch quote when page loads
+	fetchJohnWickQuote();
 
-	// Optionally refresh every minute
-	setInterval(fetchDateTime, 60000);
+	// Add click handler for new quote button
+	document.addEventListener('DOMContentLoaded', () => {
+		const button = document.getElementById('new-quote-btn');
+		if (button) {
+			button.addEventListener('click', fetchJohnWickQuote);
+		}
+	});
 </script>
 
 <style>
@@ -112,26 +123,57 @@ import background from '../assets/background.svg';
 		margin-top: 0.25em;
 	}
 
-	.time-display {
+	.quote-display {
 		margin: 2em 0;
 		padding: 1.5em;
-		background: rgba(255, 255, 255, 0.9);
+		background: rgba(255, 255, 255, 0.95);
 		border-radius: 12px;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+		text-align: center;
 	}
 
-	.time-display h2 {
+	.quote-display h2 {
 		margin: 0 0 0.5em;
-		font-size: 18px;
+		font-size: 20px;
 		color: #111827;
+		font-weight: bold;
 	}
 
-	#datetime-value {
-		font-size: 20px;
-		color: #3245ff;
+	.quote-text {
+		font-size: 22px;
+		color: #1a1a1a;
+		font-style: italic;
 		font-weight: 500;
-		margin: 0;
+		margin: 0.5em 0;
+		line-height: 1.4;
+	}
+
+	.movie-text {
+		font-size: 14px;
+		color: #666;
+		margin: 0.5em 0 1em;
+	}
+
+	.quote-button {
+		padding: 10px 20px;
+		background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 500;
+		cursor: pointer;
+		transition: opacity 0.2s;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 -2px 0 rgba(0, 0, 0, 0.24);
+	}
+
+	.quote-button:hover {
+		opacity: 0.9;
+	}
+
+	.quote-button:active {
+		transform: translateY(1px);
 	}
 
 	#links {
