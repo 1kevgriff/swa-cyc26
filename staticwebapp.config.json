@@ -7,6 +7,14 @@
       ],
       "redirect": "https://www.commityourcode.com/",
       "statusCode": 302
+    },
+    {
+      "route": "/kevin",
+      "methods": [
+        "get"
+      ],
+      "redirect": "https://consultwithgriff.com",
+      "statusCode": 302
     }
   ]
 }
